@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dapoer Jadoel - Resep Tradisional Indonesia</title>
+    <style>
+        /* --- CSS (Gaya Tampilan) --- */
+        :root {
+            --primary: #5D4037; /* Coklat Tua */
+            --secondary: #D7CCC8; /* Coklat Muda */
+            --accent: #BF360C; /* Merah Kemerahahan */
+            --bg: #FFF8E1; /* Cream Putih */
+            --text: #3E2723;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header & Pencarian */
+        header {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border-bottom: 5px solid var(--accent);
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; letter-spacing: 2px; }
+        p.subtitle { margin-top: 5px; font-style: italic; opacity: 0.9; }
+
+        .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Grid Resep */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .recipe-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--secondary);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .recipe-img {
+            height: 180px;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+        }
+
+        .recipe-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .recipe-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .btn-view {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+        }
+
+        /* Modal (Popup Detail) */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto; 
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            animation: slideDown 0.4s;
+        }
+
+        @keyframes slideDown {
+            from {top: -50px; opacity: 0;}
+            to {top: 0; opacity: 1;}
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover { color: var(--accent); }
+
+        .modal-body {
+            padding: 20px;
+            font-family: sans-serif;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            color: var(--accent);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            text-align: right;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-download {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-download:hover { background-color: #1B5E20; }
+
+        footer {
+            text-align: center;
+            padding;
+            background-color: 20px: var(--primary);
+            color: white;
+            margin-top: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>DAPOER JADOEL</h1>
+        <p class="subtitle">Kumpulan Resep Lezat Nusantara</p>
+    </header>
+
+    <!-- Menu Pencarian -->
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Cari resep (misal: Rendang, Gudeg, Es Teh)...">
+    </div>
+
+    <!-- Daftar Resep (Grid) -->
+    <div class="container" id="recipe-list">
+        <!-- Kartu resep akan muncul di sini lewat Javascript -->
+    </div>
+
+    <!-- Modal Detail Resep -->
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Nama Resep</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Konten detail akan diisi lewat JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-download" onclick="downloadRecipe()">Download Resep (.txt)</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2023 Dapoer Jadoel. Hargai Kuliner Nusantara.
+    </footer>
+
+    <script>
+        /* --- DATABASE RESEP (Array of Objects) --- */
+        const recipes = [
+            {
+                id: 1,
+                name: "Rendang Daging Sapi",
+                icon: "🥘",
+                description: "Daging sapi yang dimasak dengan rempah khas Minangkabau.",
+                ingredients: ["1 kg daging sapi", "1 liter santan kental", "5 lembar daun salam", "2 batang serai", "1 ons cabe merah giling", "Bumbu halus: lengkuas, kunyit, jahe, bawang merah, bawang putih"],
+                tools: ["Kuali (wajan) besar", "Pisau & talenan", "Sendok kayu"],
+                steps: [
+                    "Potong daging berbentuk dadu.",
+                    "Masukkan santan ke dalam kuali, tambahkan daun salam dan serai.",
+                    "Masukkan daging, masak dengan api sedang.",
+                    "Tambahkan bumbu halus dan cabe merah.",
+                    "Aduk terus hingga santan menyusut dan mengental (kurleb 3 jam)."
+                ]
+            },
+            {
+                id: 2,
+                name: "Gudeg Yogyakarta",
+                icon: "🍲",
+                description: "Nangka muda yang dimasak dengan santan dan rempah hingga empuk.",
+                ingredients: ["1 kg nangka muda", "1 liter santan", "5 butir telur rebus", "Daun salam & daun jati", "Gula jawa secukupnya"],
+                tools: ["Kendi (gerabah)", "Pisau", "Kompor"],
+                steps: [
+                    "Potong nangka muda menjadi balikan.",
+                    "Susun nangka dan telur di dalam kendi.",
+                    "Tuangkan santan yang sudah dicampur air dan gula jawa.",
+                    "Masak dengan api kecil selama berjam-jam hingga warna berubah kecoklatan dan empuk."
+                ]
+            },
+            {
+                id: 3,
+                name: "Soto Betawi",
+                icon: "🍜",
+                description: "Sup dengan kuah santan yang creamy dan gurih.",
+                ingredients: ["500 gr daging sapi/sapi mudh", "1 liter santan", "Susu murni (soptional)", "Bumbu halus: pala, merica, bawang merah/putih", "Tomat & emping"],
+                tools: ["Panci besar", "Blender (untuk bumbu)"],
+                steps: [
+                    "Rebus daging hingga empuk, potong-potong.",
+                    "Tumis bumbu halus hingga harum.",
+                    "Masukkan tumisan ke dalam rebusan kaldu daging.",
+                    "Tambahkan santan dan susu, aduk agar tidak pecah.",
+                    "Sajikan dengan irisan tomat dan emping."
+                ]
+            },
+            {
+                id: 4,
+                name: "Es Teh Manis",
+                icon: "🧋",
+                description: "Minuman segar tradisional yang wajib ada.",
+                ingredients: ["1 pouch teh celup", "Gula aren/gula pasir", "Es batu", "Air panas"],
+                tools: ["Gelas", "Sedotan"],
+                steps: [
+                    "Rendam teh dengan air panas hingga warnanya keluar.",
+                    "Saring teh ke dalam gelas.",
+                    "Masukkan gula sesuai selera.",
+                    "Aduk hingga gula larut.",
+                    "Tambahkan es batu dan sajikan."
+                ]
+            },
+            {
+                id: 5,
+                name: "Kue Lapis Legit",
+                icon: "🎂",
+                description: "Kue多层 (many layers) dengan rasa butter yang kuat.",
+                ingredients: ["1 kg mentega", "500 gr gula pasir", "20 butir kuning telur", "200 gr terigu", "Susu bubuk", "Vanili"],
+                tools: ["Oven", "Loyang tinggi", "Mixer"],
+                steps: [
+                    "Kocok mentega dan gula hingga putih dan fluffy.",
+                    "Masukkan kuning telur satu per satu sambil dikocok.",
+                    "Masukkan terigu, susu, dan vanili (aduk pakai spatula).",
+                    "Tuangkan adonan ke loyang tipis-tipis.",
+                    "Panggang setiap lapisan hingga matang kecokelatan."
+                ]
+            }
+        ];
+
+        /* --- LOGIKA WEBSITE --- */
+        
+        const recipeListContainer = document.getElementById('recipe-list');
+        const searchInput
